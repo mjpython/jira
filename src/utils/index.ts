@@ -20,7 +20,20 @@ export const useMount = (callback: () => void) => {
     callback(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 };
-
+export const useArray = <v>(arr: v[]) => {
+  const [value, setValue] = useState(arr);
+  return {
+    value,
+    setValue,
+    add: (item: v) => setValue([...value, item]),
+    clear: () => setValue([]),
+    removeIndex: (index: number) => {
+      const copy = [...value];
+      copy.splice(index, 1);
+      setValue(copy);
+    },
+  };
+};
 export const useDebounce = <v>(value: v, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
