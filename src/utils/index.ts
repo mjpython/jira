@@ -1,14 +1,14 @@
 // 当结果不为0或其他有效值时返回假（其他false时触发）
 import { useEffect, useState } from "react";
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
 // 删除值为空的对象的关键字
-export const cleanObject = (object: object) => {
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(result).forEach((key) => {
-    //@ts-ignore
     const value = result[key];
-    if (isFalsy(value)) {
-      //@ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -18,6 +18,7 @@ export const cleanObject = (object: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback(); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 export const useArray = <v>(arr: v[]) => {
