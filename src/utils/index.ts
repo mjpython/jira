@@ -1,5 +1,5 @@
 // 当结果不为0或其他有效值时返回假（其他false时触发）
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 export const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
@@ -53,7 +53,10 @@ export const useDocumentTitle = (
   title: string,
   keepOnUnmount: boolean = true
 ) => {
-  const oldTitle = document.title;
+  //新方法使用useRef的特性（在生命周期中不会发生更改）
+  const oldTitle = useRef(document.title).current;
+  // const oldTitle = document.title;
+  // 旧方法利用了闭包的坑的特性，不好理解
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -64,5 +67,5 @@ export const useDocumentTitle = (
         document.title = oldTitle;
       }
     };
-  }, []);
+  }, [keepOnUnmount, oldTitle]);
 };
