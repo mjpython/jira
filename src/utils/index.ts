@@ -15,12 +15,15 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
   return result;
 };
 
+// 初始化页面didmount
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback(); // eslint-disable-line react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
+
+// 小练习数组操作
 export const useArray = <v>(arr: v[]) => {
   const [value, setValue] = useState(arr);
   return {
@@ -35,6 +38,8 @@ export const useArray = <v>(arr: v[]) => {
     },
   };
 };
+
+// 去抖
 export const useDebounce = <v>(value: v, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
@@ -42,4 +47,22 @@ export const useDebounce = <v>(value: v, delay: number) => {
     return () => clearTimeout(timeout); //useEffect的返回值会在下一个useEffect调用时调用
   }, [value, delay]);
   return debouncedValue;
+};
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  const oldTitle = document.title;
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  // 进入页面，离开页面（销毁组件时执行）
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+  }, []);
 };
