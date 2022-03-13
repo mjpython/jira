@@ -69,3 +69,5 @@ export const useDocumentTitle = (
     };
   }, [keepOnUnmount, oldTitle]);
 };
+// 路由重置跳转
+export const resetRoute = () => (window.location.href = window.location.origin);
