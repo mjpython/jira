@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useMountedRef } from "utils";
 
 interface State<D> {
   error: Error | null;
@@ -24,47 +25,55 @@ export const useAsync = <D>(
     ...defaultInitialState,
     ...initalState,
   });
-  const [retry, setRetry] = useState(() => () => {});
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
 
-  const setError = (error: Error) =>
-    setState({
-      error,
-      stat: "error",
-      data: null,
-    });
+  const mountedRef = useMountedRef();
+  const [retry, setRetry] = useState(() => () => {});
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
+
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    []
+  );
   // run来触发异步请求
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { retry: () => Promise<D> }
-  ) => {
-    if (!promise || !promise.then) {
-      throw new Error("请传入promise类型数据");
-    }
-    setRetry(() => () => {
-      if (runConfig?.retry) {
-        run(runConfig?.retry(), runConfig);
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error("请传入promise类型数据");
       }
-    });
-    setState({ ...state, stat: "loading" });
-    return promise
-      .then((data) => {
-        setData(data);
-        return data;
-      })
-      .catch((error) => {
-        // catch回消耗error外面就会接受不到
-        setError(error);
-        if (config.throwOnError) return Promise.reject(error);
-        return error;
-        // 用promise包装一下就能被接收到了
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          run(runConfig?.retry(), runConfig);
+        }
       });
-  };
+      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      return promise
+        .then((data) => {
+          if (mountedRef.current) setData(data);
+          return data;
+        })
+        .catch((error) => {
+          // catch回消耗error外面就会接受不到
+          setError(error);
+          if (config.throwOnError) return Promise.reject(error);
+          return error;
+          // 用promise包装一下就能被接收到了
+        });
+    },
+    [config.throwOnError, mountedRef, setData, setError]
+  );
 
   return {
     isIdle: state.stat === "idle",

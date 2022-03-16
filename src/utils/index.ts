@@ -71,3 +71,14 @@ export const useDocumentTitle = (
 };
 // 路由重置跳转
 export const resetRoute = () => (window.location.href = window.location.origin);
+// 判断组件是否已经挂载成功
+export const useMountedRef = () => {
+  const montedRef = useRef(false);
+  useEffect(() => {
+    montedRef.current = true;
+    return () => {
+      montedRef.current = false;
+    };
+  });
+  return montedRef;
+};
