@@ -3,8 +3,10 @@ import { ButtonNoPadding } from "components/lib";
 import { Pin } from "components/pin";
 import dayjs from "dayjs";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { useEditProject } from "utils/project";
+import { projectListAcitons } from "./project-list.slice";
 import { User } from "./search-panel";
 export interface Project {
   id: number;
@@ -17,9 +19,9 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   refresh?: () => void;
-  setProjectModalOpen: (isOpen: boolean) => void;
 }
 const List = ({ users, ...props }: ListProps) => {
+  const dispatch = useDispatch();
   const { mutate } = useEditProject();
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
@@ -81,7 +83,9 @@ const List = ({ users, ...props }: ListProps) => {
                     <Menu.Item key={"edit"}>
                       <ButtonNoPadding
                         type="link"
-                        onClick={() => props.setProjectModalOpen(true)}
+                        onClick={() =>
+                          dispatch(projectListAcitons.openProjectModal())
+                        }
                       >
                         编辑
                       </ButtonNoPadding>

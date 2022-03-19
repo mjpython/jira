@@ -8,9 +8,9 @@ import { useProjects } from "utils/project";
 import { useUsers } from "utils/user";
 import { useProjectsSearchParams } from "./utils";
 import { Row } from "components/lib";
-export const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+import { useDispatch } from "react-redux";
+import { projectListAcitons } from "./project-list.slice";
+export const ProjectListScreen = () => {
   useDocumentTitle("项目列表", false);
   const [param, setParam] = useProjectsSearchParams();
   const {
@@ -20,12 +20,12 @@ export const ProjectListScreen = (props: {
     retry,
   } = useProjects(useDebounce(param, 200));
   const { data: users } = useUsers();
-
+  const dispatch = useDispatch();
   return (
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>
+        <Button onClick={() => dispatch(projectListAcitons.openProjectModal())}>
           创建项目
         </Button>
       </Row>
@@ -34,7 +34,6 @@ export const ProjectListScreen = (props: {
         <Typography.Text type="danger">{error.message}</Typography.Text>
       ) : null}
       <List
-        setProjectModalOpen={props.setProjectModalOpen}
         refresh={retry}
         loading={isLoading}
         users={users || []}

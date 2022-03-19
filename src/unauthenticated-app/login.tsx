@@ -3,6 +3,7 @@ import React from "react";
 import { Form, Input } from "antd";
 import { Longbutton } from "unauthenticated-app";
 import { useAsync } from "utils/use-async";
+import { useDispatch } from "react-redux";
 export const LoginScreen = ({
   onError,
 }: {
@@ -10,11 +11,13 @@ export const LoginScreen = ({
 }) => {
   const { login } = useAuth();
   const { run, isLoading } = useAsync(undefined, { throwOnError: true });
+  // const dispatch = useDispatch()
   // 点击提交按钮事件
   const handleSubmit = async (values: {
     username: string;
     password: string;
   }) => {
+    // dispatch(login(values))
     try {
       await run(login(values));
     } catch (e: any) {

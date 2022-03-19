@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component } from "react";
 
 type FallbackRender = (props: { error: Error | null }) => React.ReactElement;
 export class ErrorBoundary extends Component<
