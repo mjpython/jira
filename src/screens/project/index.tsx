@@ -15,7 +15,12 @@ export const ProjectScreen = () => {
         {/* v6 移除了 Redirect 组件，改用 Navigate 组件。*/}
         <Route
           path="*"
-          element={<Navigate to={window.location.pathname + "/kanban"} />}
+          element={
+            <Navigate
+              to={window.location.pathname + "/kanban"}
+              replace={true}
+            />
+          }
         />
       </Routes>
     </div>
