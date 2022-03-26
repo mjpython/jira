@@ -18,7 +18,7 @@ export const SearchPanel = () => {
     });
   };
   return (
-    <Row marginBottom={4} gap={true}>
+    <Row marginBottom={1} gap={true}>
       <Input
         style={{ width: "20rem" }}
         placeholder="任务名"
@@ -35,7 +35,7 @@ export const SearchPanel = () => {
         value={searchParams.typeId}
         onChange={(value) => setSearchParams({ typeId: value })}
       />
-      <Button onClick={reset}>清楚筛选器</Button>
+      <Button onClick={reset}>清除筛选器</Button>
     </Row>
   );
 };

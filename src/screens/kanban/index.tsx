@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { ScreenContainer } from "components/lib";
 import React from "react";
 import { useDocumentTitle } from "utils";
 import { useKanbans } from "utils/kanban";
@@ -11,7 +12,7 @@ export const KanbanScreen = () => {
   const { data: currentProject } = useProjectInUrl();
   const { data: kanbans } = useKanbans(useKanbanSearchParams());
   return (
-    <div>
+    <ScreenContainer>
       <h1>{currentProject?.name}看板</h1>
       <SearchPanel />
       <ColumnsContainer>
@@ -19,13 +20,13 @@ export const KanbanScreen = () => {
           <KanbanColumn key={kanban.id} kanban={kanban}></KanbanColumn>
         ))}
       </ColumnsContainer>
-    </div>
+    </ScreenContainer>
   );
 };
 
 // 使我们的看板横向排列
 const ColumnsContainer = styled.div`
   display: flex;
-  overflow: hidden;
-  margin-right: 2rem;
+  overflow-x: scroll;
+  flex: 1;
 `;

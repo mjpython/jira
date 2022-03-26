@@ -14,7 +14,7 @@ const TaskTypeIcon = ({ id }: { id: number }) => {
   if (!name) {
     return null;
   }
-  return <img alt="" width={"4%"} src={name === "task" ? taskIcon : bugIcon} />;
+  return <img alt="" width={"5%"} src={name === "task" ? taskIcon : bugIcon} />;
 };
 
 function KanbanColumn({ kanban }: { kanban: Kanban }) {
@@ -26,8 +26,9 @@ function KanbanColumn({ kanban }: { kanban: Kanban }) {
         <h3>{kanban.name}</h3>
         {tasks?.map((task) => (
           <Card style={{ marginBottom: "0.5rem" }} key={task.id}>
-            <div>{task.name}</div>
-            <TaskTypeIcon id={task.id} />
+            <div>
+              {task.name} <TaskTypeIcon id={task.id} />
+            </div>
           </Card>
         ))}
       </TasksContainer>
